@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "name": "Customer Portal Redesign",
+      "owner": "Aisha Khan",
+      "status": "On Track",
+      "recentActivity": "2026-06-08T09:32:00Z",
+      "priority": "High"
+    },
+    {
+      "name": "Mobile App Analytics",
+      "owner": "Marcus Lee",
+      "status": "At Risk",
+      "recentActivity": "2026-06-05T14:10:00Z",
+      "priority": "Medium"
+    },
+    {
+      "name": "Billing System Migration",
+      "owner": "Sofia Ramirez",
+      "status": "Off Track",
+      "recentActivity": "Delayed: dependency on vendor API",
+      "priority": "High"
+    },
+    {
+      "name": "Internal Knowledge Base",
+      "owner": "Evan Park",
+      "status": "On Track",
+      "recentActivity": "2026-06-09T11:00:00Z",
+      "priority": "Low"
+    }
+  ]
+}

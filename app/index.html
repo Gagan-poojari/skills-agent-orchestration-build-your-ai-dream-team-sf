@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project Pulse</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="container">
+      <h1 id="page-title">Project Pulse</h1>
+      <p class="lead">A quick view of active projects, health and priority.</p>
+    </div>
+  </header>
+
+  <main id="main" class="container" role="main" aria-labelledby="page-title">
+    <section class="dashboard" id="dashboard" aria-live="polite" aria-label="Project dashboard">
+      <!-- Project cards will be injected here -->
+    </section>
+
+    <template id="card-template">
+      <article class="project-card" tabindex="0" role="article" aria-labelledby="proj-name" aria-describedby="proj-meta">
+        <header class="card-header">
+          <h2 id="proj-name" class="proj-name"></h2>
+          <span class="status-badge" aria-hidden="true"></span>
+        </header>
+        <div class="card-body">
+          <p class="owner" id="proj-meta"></p>
+          <p class="recent-activity"></p>
+        </div>
+        <footer class="card-footer">
+          <span class="priority-pill" aria-hidden="true"></span>
+        </footer>
+      </article>
+    </template>
+
+    <noscript>
+      <div class="no-js-message" role="region" aria-live="polite">
+        <strong>JavaScript is required</strong> to load the live project dashboard. A static snapshot is provided below.
+      </div>
+    </noscript>
+
+    <!-- Inline fallback JSON (kept in sync with ./project-data.json) -->
+    <script id="project-data" type="application/json">
+{
+  "projects": [
+    {
+      "name": "Customer Portal Redesign",
+      "owner": "Aisha Khan",
+      "status": "On Track",
+      "recentActivity": "2026-06-08T09:32:00Z",
+      "priority": "High"
+    },
+    {
+      "name": "Mobile App Analytics",
+      "owner": "Marcus Lee",
+      "status": "At Risk",
+      "recentActivity": "2026-06-05T14:10:00Z",
+      "priority": "Medium"
+    },
+    {
+      "name": "Billing System Migration",
+      "owner": "Sofia Ramirez",
+      "status": "Off Track",
+      "recentActivity": "Delayed: dependency on vendor API",
+      "priority": "High"
+    },
+    {
+      "name": "Internal Knowledge Base",
+      "owner": "Evan Park",
+ "status": "On Track",
+      "recentActivity": "2026-06-09T11:00:00Z",
+      "priority": "Low"
+    }
+  ]
+}
+    </script>
+
+  </main>
+
+  <script>
+    (function () {
+      const DATA_PATH = './project-data.json';
+      const fallbackEl = document.getElementById('project-data');
+      const dashboard = document.getElementById('dashboard');
+      const template = document.getElementById('card-template');
+
+      function formatRecentActivity(text) {
+        try {
+          const d = new Date(text);
+          if (!isNaN(d.valueOf()) && text.includes('-')) {
+            return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+          }
+        } catch (e) {}
+        return text;
+      }
+
+      function createCard(project) {
+        const node = template.content.cloneNode(true);
+        const article = node.querySelector('.project-card');
+        const nameEl = node.querySelector('.proj-name');
+        const ownerEl = node.querySelector('.owner');
+        const recentEl = node.querySelector('.recent-activity');
+        const statusBadge = node.querySelector('.status-badge');
+        const priorityPill = node.querySelector('.priority-pill');
+
+        nameEl.textContent = project.name;
+        ownerEl.textContent = 'Owner: ' + project.owner;
+        recentEl.textContent = 'Recent: ' + formatRecentActivity(project.recentActivity);
+        statusBadge.textContent = project.status;
+        statusBadge.setAttribute('data-status', project.status);
+        priorityPill.textContent = project.priority;
+        priorityPill.setAttribute('data-priority', project.priority);
+
+        article.setAttribute('aria-label', project.name + '. Status: ' + project.status + '. Priority: ' + project.priority);
+
+        article.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            article.classList.toggle('is-selected');
+            article.focus();
+          }
+        });
+
+        return node;
+      }
+
+      function render(projects) {
+        dashboard.innerHTML = '';
+        if (!Array.isArray(projects) || projects.length === 0) {
+          const empty = document.createElement('p');
+          empty.className = 'empty';
+          empty.textContent = 'No projects available';
+          dashboard.appendChild(empty);
+          return;
+        }
+
+        projects.forEach(p => {
+          const card = createCard(p);
+          dashboard.appendChild(card);
+        });
+      }
+
+      async function loadData() {
+        try {
+          const resp = await fetch(DATA_PATH, { cache: "no-store" });
+          if (!resp.ok) throw new Error('Network response not ok');
+          const data = await resp.json();
+          if (data && data.projects) {
+            render(data.projects);
+            return;
+          }
+          throw new Error('Malformed JSON');
+        } catch (err) {
+          try {
+            const fallback = JSON.parse(fallbackEl.textContent);
+            if (fallback && fallback.projects) {
+              render(fallback.projects);
+              return;
+            }
+          } catch (e) {
+          }
+          dashboard.innerHTML = '<p class="error">Unable to load project data.</p>';
+        }
+      }
+
+      loadData();
+    })();
+  </script>
+</body>
+</html>

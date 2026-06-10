@@ -1,0 +1,185 @@
+:root {
+  /* Designer tokens / CSS variables */
+  --bg: #f6f8fb;
+  --card-bg: #ffffff;
+  --muted: #6b7280;
+  --text: #0f172a;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --rounded: 12px;
+  --shadow-sm: 0 1px 2px rgba(16,24,40,0.04);
+  --shadow-md: 0 6px 18px rgba(15,23,42,0.08);
+  --gap: 16px;
+  --max-width: 1100px;
+  --focus-ring: 3px;
+  --transition: 200ms ease;
+  --card-min-width: 220px;
+}
+
+* { box-sizing: border-box; }
+html,body { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: var(--text); background: var(--bg); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Header */
+.site-header {
+  background: linear-gradient(90deg, rgba(37,99,235,0.06), transparent);
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+  padding: 18px 0;
+  margin-bottom: 12px;
+}
+.site-header .lead {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+/* Dashboard grid */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--card-min-width), 1fr));
+  gap: var(--gap);
+  align-items: start;
+  margin-top: 8px;
+}
+
+/* Project card */
+.project-card {
+  background: var(--card-bg);
+  border-radius: var(--rounded);
+  box-shadow: var(--shadow-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  border: 1px solid rgba(2,6,23,0.04);
+  transition: transform var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(2,6,23,0.08);
+}
+
+/* Focus-visible ring */
+.project-card:focus {
+  box-shadow: 0 8px 26px rgba(2,6,23,0.07);
+  border-color: rgba(37,99,235,0.25);
+  position: relative;
+}
+.project-card:focus-visible {
+  box-shadow: 0 8px 26px rgba(2,6,23,0.07);
+  outline: solid rgba(37,99,235,0.14) var(--focus-ring);
+  outline-offset: 4px;
+}
+
+/* Header inside card */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.proj-name {
+  font-size: 1.05rem;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: white;
+  text-transform: none;
+}
+
+/* Color variants for status */
+.status-badge[data-status="On Track"] {
+  background: linear-gradient(180deg, var(--success), #059669);
+}
+.status-badge[data-status="At Risk"] {
+  background: linear-gradient(180deg, var(--warning), #d97706);
+}
+.status-badge[data-status="Off Track"] {
+  background: linear-gradient(180deg, var(--danger), #b91c1c);
+}
+
+/* Card body */
+.card-body {
+  margin-top: 12px;
+  flex: 1 1 auto;
+}
+.owner {
+  margin: 0 0 6px 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.recent-activity {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+/* Footer */
+.card-footer {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Priority pill */
+.priority-pill {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: white;
+}
+
+/* Priority colors */
+.priority-pill[data-priority="High"] {
+  background: linear-gradient(180deg,#ef4444,#dc2626);
+}
+.priority-pill[data-priority="Medium"] {
+  background: linear-gradient(180deg,#f59e0b,#d97706);
+}
+.priority-pill[data-priority="Low"] {
+  background: linear-gradient(180deg,#10b981,#059669);
+}
+
+/* Empty and error states */
+.empty, .error, .no-js-message {
+  background: #fff;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: var(--shadow-sm);
+  color: var(--muted);
+}
+
+/* Responsive tweaks */
+@media (max-width: 700px) {
+  .container { padding: 16px; }
+  .project-card { padding: 14px; }
+  .proj-name { font-size: 1rem; }
+}
+
+/* Small accessible helpers */
+a { color: var(--accent); }
+button { font: inherit; }
+
+/* subtle hover state for badges */
+.status-badge:hover, .priority-pill:hover {
+  transform: translateY(-2px);
+  transition: transform var(--transition);
+}
